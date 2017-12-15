@@ -5,16 +5,16 @@ import java.net.UnknownHostException;
 
 //Client de base pris sur OpenClassRoom
 
-public class Client {
+public class SyncMaitre {
 	
 	public static void main(String[] zero) {
 		
 		Socket socket;
 
 		try {
-		System.out.println("Je suis le client");
-		     socket = new Socket(InetAddress.getLocalHost(),2008);	
-	             socket.close();
+			System.out.println("Je suis le Maitre");
+		    socket = new Socket(InetAddress.getLocalHost(),2008);	
+	        socket.close();
 
 		}catch (UnknownHostException e) {
 			

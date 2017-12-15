@@ -4,7 +4,7 @@ import java.net.Socket;
 
 //Serveur de base pris sur OpenClassRoom
 
-public class Serveur {
+public class SyncServeur {
 
 	public static void main(String[] args) {
 		
