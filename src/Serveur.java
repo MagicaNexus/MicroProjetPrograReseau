@@ -6,13 +6,13 @@ import java.net.Socket;
 
 public class Serveur {
 
-	public static void main(String[] zero) {
+	public static void main(String[] args) {
 		
 		ServerSocket socketserver  ;
 		Socket socketduserveur ;
 
 		try {
-		
+			System.out.println("Je suis le serveur");
 			socketserver = new ServerSocket(2008);
 			socketduserveur = socketserver.accept(); 
 			System.out.println("Nouvelle connexion");

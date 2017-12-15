@@ -12,7 +12,7 @@ public class Client {
 		Socket socket;
 
 		try {
-		
+		System.out.println("Je suis le client");
 		     socket = new Socket(InetAddress.getLocalHost(),2008);	
 	             socket.close();
 
