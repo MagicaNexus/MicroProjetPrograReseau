@@ -114,7 +114,7 @@ public class Authentification implements Runnable {
 		
 	}
 	
-	//Validation de l'utilisateur
+		//Validation de l'utilisateur
 		private static boolean isValidE(String ID, String password) {
 			
 			boolean connexion = false;
