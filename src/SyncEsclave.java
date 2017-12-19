@@ -12,8 +12,8 @@ public class SyncEsclave {
 		Socket socket;
 
 		try {
-			System.out.println("Je suis l'esclave");
-		    socket = new Socket(InetAddress.getLocalHost(),2008);	
+			System.out.println("Je suis l'esclave et je viens de me connecter");
+		    socket = new Socket(InetAddress.getLocalHost(),2009);	
 	        socket.close();
 
 		}catch (UnknownHostException e) {

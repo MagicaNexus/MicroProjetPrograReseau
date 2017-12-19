@@ -12,8 +12,8 @@ public class SyncMaitre {
 		Socket socket;
 
 		try {
-			System.out.println("Je suis le Maitre");
-		    socket = new Socket(InetAddress.getLocalHost(),2008);	
+			System.out.println("Je suis le Maitre et je viens de me connecter");
+		    socket = new Socket(InetAddress.getLocalHost(),2009);	
 	        socket.close();
 
 		}catch (UnknownHostException e) {

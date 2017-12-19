@@ -3,7 +3,9 @@ package Classe_Client;
 import java.io.IOException;
 import java.net.*;
 
-class Accepterclients implements Runnable {
+public class Accepterclients implements Runnable
+
+{
 
 	   private ServerSocket socketserver;
 	   private Socket socket;
@@ -28,4 +30,4 @@ class Accepterclients implements Runnable {
 			}
 		}
 
-	}
+}
