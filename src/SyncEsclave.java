@@ -25,5 +25,9 @@ public class SyncEsclave {
 		}
 	}
 
+	public void pull()
+	{
+		
+	}
 }
 

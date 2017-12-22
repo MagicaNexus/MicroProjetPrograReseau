@@ -25,4 +25,8 @@ public class SyncMaitre {
 		}
 	}
 
+	public void push()
+	{
+		
+	}
 }
