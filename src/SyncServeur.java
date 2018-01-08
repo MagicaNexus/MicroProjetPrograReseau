@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -38,13 +39,16 @@ public class SyncServeur {
 		System.out.println(getCompteur() + " clients connectés");
 	}
 	
+	
 	//Connexion du serveur
 	public static void main(String[] args) {
 			
+			int srvport = Integer.parseInt(args[2]);
+			String repRacine = args[3]; // récuperation des parametres
 			ServerSocket socket;
 			try 
 			{
-				socket = new ServerSocket(2009);
+				socket = new ServerSocket(srvport);
 				Thread t = new Thread(new Accepterclients(socket));
 				t.start();
 				System.out.println("Le serveur est prêt pour la connexion");
