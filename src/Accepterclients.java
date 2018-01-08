@@ -24,7 +24,7 @@ public class Accepterclients implements Runnable
 	        		  socket = socketserver.accept(); // Un client se connecte on l'accepte => Pas d'identification encore
 	                  System.out.println("Le client numéro "+nbrclient+ " est connecté !");
 	                  nbrclient++;
-	                  Transfer.transfert(socket.getInputStream(),new FileOutputStream("Serveur\\AStocker.txt"), false);
+	                  Transfer.transfert(socket.getInputStream(),new FileOutputStream("Serveur\\AStocker.txt"), true);
 	                  socket.close();
 	                  
 	        	}

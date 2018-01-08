@@ -18,7 +18,7 @@ public class SyncMaitre {
 		try {
 			System.out.println("Je suis le Maitre et je viens de me connecter");
 		    socket = new Socket(InetAddress.getLocalHost(),8082/*svrNomPort*/);	
-	        Transfer.transfert(new FileInputStream(file), socket.getOutputStream(), false);
+	        Transfer.transfert(new FileInputStream(file), socket.getOutputStream(), true);
 		    socket.close();
 
 		}catch (UnknownHostException e) {
