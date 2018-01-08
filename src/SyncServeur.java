@@ -49,6 +49,7 @@ public class SyncServeur {
 				t.start();
 				System.out.println("Le serveur est prêt pour la connexion");
 				
+				
 			} catch (IOException e) {
 				
 				e.printStackTrace();
