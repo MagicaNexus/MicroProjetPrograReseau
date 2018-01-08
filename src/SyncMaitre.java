@@ -14,7 +14,7 @@ public class SyncMaitre {
 		/*int svrNomPort = Integer.parseInt(args[2]);
 		String repSrc = args[3], repRacine = args[4];*/
 		Socket socket;
-		File file = new File("ATransferer.txt");
+		File file = new File("Maitre\\ATransferer.txt");
 		try {
 			System.out.println("Je suis le Maitre et je viens de me connecter");
 		    socket = new Socket(InetAddress.getLocalHost(),8082/*svrNomPort*/);	
