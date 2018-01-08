@@ -11,14 +11,14 @@ public class SyncMaitre {
 	
 	public static void main(String[] args) {
 		
-		int svrNomPort = Integer.parseInt(args[2]);
-		String repSrc = args[3], repRacine = args[4];
+		/*int svrNomPort = Integer.parseInt(args[2]);
+		String repSrc = args[3], repRacine = args[4];*/
 		Socket socket;
-		File file = new File("H:\\test.txt");
+		File file = new File("ATransferer.txt");
 		try {
 			System.out.println("Je suis le Maitre et je viens de me connecter");
-		    socket = new Socket(InetAddress.getLocalHost(),svrNomPort);	
-	        Transfer.transfert(new FileInputStream(file), socket.getOutputStream(), true);
+		    socket = new Socket(InetAddress.getLocalHost(),8082/*svrNomPort*/);	
+	        Transfer.transfert(new FileInputStream(file), socket.getOutputStream(), false);
 		    socket.close();
 
 		}catch (UnknownHostException e) {

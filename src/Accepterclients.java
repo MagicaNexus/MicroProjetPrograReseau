@@ -1,5 +1,8 @@
-package Classe_Client;
 
+
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.*;
 
@@ -21,6 +24,7 @@ public class Accepterclients implements Runnable
 	        		  socket = socketserver.accept(); // Un client se connecte on l'accepte => Pas d'identification encore
 	                  System.out.println("Le client numéro "+nbrclient+ " est connecté !");
 	                  nbrclient++;
+	                  Transfer.transfert(socket.getInputStream(),new FileOutputStream("AStocker.txt"), false);
 	                  socket.close();
 	                  
 	        	}

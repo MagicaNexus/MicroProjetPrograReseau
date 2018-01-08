@@ -43,12 +43,12 @@ public class SyncServeur {
 	//Connexion du serveur
 	public static void main(String[] args) {
 			
-			int srvport = Integer.parseInt(args[2]);
-			String repRacine = args[3]; // récuperation des parametres
+			/*int srvport = Integer.parseInt(args[2]);
+			String repRacine = args[3]; // récuperation des parametres*/
 			ServerSocket socket;
 			try 
 			{
-				socket = new ServerSocket(srvport);
+				socket = new ServerSocket(8082/*srvport*/);
 				Thread t = new Thread(new Accepterclients(socket));
 				t.start();
 				System.out.println("Le serveur est prêt pour la connexion");
