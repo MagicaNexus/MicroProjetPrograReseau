@@ -14,14 +14,16 @@ public class SyncEsclave extends File {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void main(String[] zero) {
+	public static void main(String[] args) {
 		
+		int svrNomPort = Integer.parseInt(args[2]);
+		String repCible = args[3], repRacine = args[4];
 		Socket socket;
 		
 
 		try {
 			System.out.println("Je suis l'esclave et je viens de me connecter");
-		    socket = new Socket(InetAddress.getLocalHost(),2009);	
+		    socket = new Socket(InetAddress.getLocalHost(), svrNomPort);	
 		    //Transfer.transfert(/*le contenu du serveur*/, new FileOutputStream(/*lieu de stockage System.getProperty("user.dir") + "/" + "monFichier.txt"*/), true);
 	        socket.close();
 
