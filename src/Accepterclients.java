@@ -4,6 +4,7 @@
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.*;
 
 public class Accepterclients implements Runnable
@@ -24,7 +25,10 @@ public class Accepterclients implements Runnable
 	        		  socket = socketserver.accept(); // Un client se connecte on l'accepte => Pas d'identification encore
 	                  System.out.println("Le client numéro "+nbrclient+ " est connecté !");
 	                  nbrclient++;
-	                  Transfer.transfert(socket.getInputStream(),new FileOutputStream("Serveur\\AStocker.txt"), true);
+	                  ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+	                  String fileName = in.readUTF();
+	                  System.out.println(fileName);
+	                  Transfer.transfert(in,new FileOutputStream("Serveur\\"+fileName), true);
 	                  socket.close();
 	                  
 	        	}

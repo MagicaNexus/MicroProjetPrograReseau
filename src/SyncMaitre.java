@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -17,6 +18,7 @@ public class SyncMaitre {
 		Socket socket;
 		File contenu = new File ("Maitre");
 		File file = new File("Maitre\\ATransferer.txt");
+		String doc = "ATransferer.txt";
 		try {
 			System.out.println("Je suis le Maitre et je viens de me connecter");
 		    socket = new Socket(InetAddress.getLocalHost(),8082/*svrNomPort*/);	
@@ -31,8 +33,10 @@ public class SyncMaitre {
 			System.out.println("Qui contient :");
 	        afficheDocument(contenu.list(),contenu.getName());
 	        /*transfertDocument(contenu.list() ,contenu.getName(), socket);*/
+	        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 	        
-	        Transfer.transfert(new FileInputStream(file), socket.getOutputStream(), true);
+	        out.writeUTF(doc);
+	        Transfer.transfert(new FileInputStream(file), out, true);
 		    socket.close();
 
 		}catch (UnknownHostException e) {
@@ -44,15 +48,16 @@ public class SyncMaitre {
 		}
 	}
 
-	public static void transfertDocument(String[] paths ,String parent, Socket socket) throws IOException
+	public static void transfertDocument(String[] paths ,String parent, ObjectOutputStream out) throws IOException
 	{
 		for(String path:paths) {
 			File f = new File (parent+"\\"+path);
 			if (f.isDirectory())
 			{
-				transfertDocument(f.list(),f.getName(), socket);
+				transfertDocument(f.list(),f.getName(), out);
 			}
-			Transfer.transfert(new FileInputStream(f), socket.getOutputStream(), true);
+			out.writeUTF(path);
+			Transfer.transfert(new FileInputStream(f), out, true);
          }
 	}
 	public static void afficheDocument(String[] paths ,String parent) throws IOException
