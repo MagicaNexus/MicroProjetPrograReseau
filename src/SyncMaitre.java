@@ -30,6 +30,8 @@ public class SyncMaitre {
 			System.out.println("Est un repertoire : " + contenu.isDirectory());
 			System.out.println("Qui contient :");
 	        afficheDocument(contenu.list(),contenu.getName());
+	        /*transfertDocument(contenu.list() ,contenu.getName(), socket);*/
+	        
 	        Transfer.transfert(new FileInputStream(file), socket.getOutputStream(), true);
 		    socket.close();
 
@@ -42,6 +44,17 @@ public class SyncMaitre {
 		}
 	}
 
+	public static void transfertDocument(String[] paths ,String parent, Socket socket) throws IOException
+	{
+		for(String path:paths) {
+			File f = new File (parent+"\\"+path);
+			if (f.isDirectory())
+			{
+				transfertDocument(f.list(),f.getName(), socket);
+			}
+			Transfer.transfert(new FileInputStream(f), socket.getOutputStream(), true);
+         }
+	}
 	public static void afficheDocument(String[] paths ,String parent) throws IOException
 	{
 		for(String path:paths) {
