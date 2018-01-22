@@ -34,7 +34,7 @@ public class SyncMaitre {
 	        afficheDocument(contenu.list(),contenu.getName());
 	        /*transfertDocument(contenu.list() ,contenu.getName(), socket);*/
 	        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-	        
+	       
 	        out.writeUTF(doc);
 	        Transfer.transfert(new FileInputStream(file), out, true);
 		    socket.close();
@@ -54,9 +54,12 @@ public class SyncMaitre {
 			File f = new File (parent+"\\"+path);
 			if (f.isDirectory())
 			{
+				parent += "\\" + f.getName();
 				transfertDocument(f.list(),f.getName(), out);
 			}
-			out.writeUTF(path);
+			out.writeUTF(path); 
+			Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
+			out.writeObject(m); 
 			Transfer.transfert(new FileInputStream(f), out, true);
          }
 	}
@@ -66,7 +69,8 @@ public class SyncMaitre {
 			File f = new File (parent+"\\"+path);
 			if (f.isDirectory())
 			{
-				afficheDocument(f.list(),f.getName());
+				parent += "\\" + f.getName();
+				afficheDocument(f.list(),parent);
 			}
             afficheMetaDonnee(f);
          }
@@ -74,12 +78,14 @@ public class SyncMaitre {
 	
 	public static void afficheMetaDonnee(File f) throws IOException
 	{
-		 System.out.println(f.getName() + " contenu dans " + f.getParent()+ "\n");
-		 System.out.println("\tChemin : "+f.getCanonicalPath());
-		 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	     System.out.println("\tDate derniere modification : " + sdf.format(f.lastModified()));
-		 double bytes = f.length();
-		 System.out.println("\tTaille du document : " + bytes + " octets\n");
+		 Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
+		 System.out.println(m.toString());
 	}
-	
+	/*public static Metadonnee transfertMetaDonnee(File f) throws IOException
+	{
+		 Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
+		 System.out.println(m.toString());
+		 return m;
+		 
+	}*/
 }

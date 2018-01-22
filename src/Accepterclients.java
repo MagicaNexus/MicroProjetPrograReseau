@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.*;
+import java.text.SimpleDateFormat;
 
 public class Accepterclients implements Runnable
 
@@ -27,13 +28,18 @@ public class Accepterclients implements Runnable
 	                  nbrclient++;
 	                  ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 	                  String fileName = in.readUTF();
+	                  Metadonnee m = (Metadonnee) in.readObject(); 
 	                  System.out.println(fileName);
+	                  System.out.println(m.toString());
 	                  Transfer.transfert(in,new FileOutputStream("Serveur\\"+fileName), true);
 	                  socket.close();
 	                  
 	        	}
 	        
 	        } catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
