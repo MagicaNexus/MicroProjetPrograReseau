@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import Classe_Client.*;
 
 //Serveur de base pris sur OpenClassRoom
 
@@ -46,6 +45,7 @@ public class SyncServeur {
 			/*int srvport = Integer.parseInt(args[2]);
 			String repRacine = args[3]; // récuperation des parametres*/
 			ServerSocket socket;
+			System.out.println("En attente de reception.............");
 			try 
 			{
 				socket = new ServerSocket(8082/*srvport*/);

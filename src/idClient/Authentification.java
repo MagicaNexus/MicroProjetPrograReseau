@@ -24,7 +24,6 @@ public class Authentification implements Runnable {
 	
 		try {
 			
-			
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream());
 			

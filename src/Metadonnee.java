@@ -17,10 +17,9 @@ public class Metadonnee implements Serializable {
 	
 	public String toString() {
 		String meta;
-		 meta  = nom + "Contenu dans : \n" + chemin + 
-				 "\n \tDate derniere modification : "+
-				 sdf.format(dateM) + "\n \tTaille du document : "+
-				 tailleB + " octets\n";
+		 meta  = nom + " est dans l'emplacement suivant : \n" + chemin 
+				 + "\n \tDate derniere modification : "+ sdf.format(dateM) 
+				 + "\n \tTaille du document : "+ tailleB + " octets\n";
 		return meta;	
 	}
 }
