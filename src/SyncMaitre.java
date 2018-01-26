@@ -6,12 +6,13 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 //Client de base pris sur OpenClassRoom
 
 public class SyncMaitre {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		
 		/*int svrNomPort = Integer.parseInt(args[2]);
 		String repSrc = args[3], repRacine = args[4];*/
@@ -22,7 +23,10 @@ public class SyncMaitre {
 		File contenu = new File ("Maitre"); //Création d'un dossier maitre
 		File file = new File("Maitre\\ATransferer.txt"); //Création d'un nouveau fichier tkt atranferer
 		String[] doc = {"ATransferer.txt"}; //Tableau de string contenant le nom du fichier créé
-		
+		ArrayList<String> nomDocs = new ArrayList();
+		String test = "H:\\Mes documents\\4A\\programation reseaux, concurrente et distribuée\\MicroProjet\\MicroProjetPrograReseau\\Maitre\\test\\test2\\test2ception.txt";
+		test.replaceAll("H:\\Mes documents\\4A\\programation reseaux, concurrente et distribuée\\MicroProjet\\MicroProjetPrograReseau\\", "");
+		System.out.println("test regex java" + test);
 		try {
 			
 			//Connexion du maitre
@@ -52,7 +56,7 @@ public class SyncMaitre {
 	        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); //Création d'un objet de sortie
 	        
 	        
-	        transfertDocument(doc,contenu.getName(),out); //Transfert du document --> Changement file - contenu
+	        transfertDocument(contenu.list(),contenu.getName(),out,nomDocs); //Transfert du document --> Changement file - contenu
 	        
 	        
 	        out.writeUTF(doc[0]);
@@ -68,36 +72,41 @@ public class SyncMaitre {
 		}
 	}
 
-	public static void transfertDocument(String[] paths ,String parent, ObjectOutputStream out) throws IOException
+	public static void transfertDocument(String[] paths ,String parent, ObjectOutputStream out, ArrayList<String> nomDocs) throws IOException, InterruptedException
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
-		System.out.println("---- Début du transfert......................");
+		System.out.println("\n---- Début du transfert......................");
 		System.out.println("Affichage du chemin : " + paths);
 		System.out.println("Affichage du parent : " + parent);
 		for(String path:paths) 
 		{
 			File f = new File (parent+"\\"+path);
 			//Debug
+			//nomDocs.add(f.);
 			System.out.println("Création du fichier à l'emplacement suivant : " +parent+"\\"+path);
 			if (f.isDirectory())
 			{
 				parent += "\\" + f.getName();
-				transfertDocument(f.list(),f.getName(), out);
+				transfertDocument(f.list(),parent, out, nomDocs);
 				//debug
 				System.out.println("Changement de repertoire réussi : " + parent);
 			}
+			Thread.sleep(1000);
 			out.writeUTF(path); 
 			Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
 			System.out.println("Date de derniere modification vu par le fichier: " + sdf.format(f.lastModified()));
 			System.out.println("Date de derniere modification de la metadonnée : " + sdf.format(m.dateM));
+			Thread.sleep(1000);
 			out.writeObject(m);
 			//debug
 			System.out.println("\n\nCréation métadonnées ok\n\n");
-			Transfer.transfert(new FileInputStream(f), out, true);
+			Thread.sleep(1000);
+			Transfer.transfert(new FileInputStream(f), out, false);
 			
 			System.out.println("\n\nFin du transfert .........................................");
          }
+		out.close();
 	}
 	public static void afficheDocument(String[] paths ,String parent) throws IOException
 	{

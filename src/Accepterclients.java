@@ -55,7 +55,7 @@ public class Accepterclients implements Runnable
 		System.out.println("Affichage du parent : " + parent);
 		
 		System.out.println("Date de derniere modification de la metadonnée : " + sdf.format(m.dateM));
-
+		
 		
 		for (String path : paths) {
 			File f = new File(contenu.getName(), m.nom);
@@ -70,7 +70,7 @@ public class Accepterclients implements Runnable
 
 			// debug
 			System.out.println("\n\nCréation métadonnées ok\n\n");
-			Transfer.transfert(in, new FileOutputStream(f), true);
+			Transfer.transfert(in, new FileOutputStream(f), false);
 			f.setLastModified(m.dateM);
 			System.out.println("Date modif du fichier : " + sdf.format(f.lastModified()));
 
