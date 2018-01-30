@@ -18,7 +18,7 @@ public class SyncEsclave {
 			System.out.println("Il faut au moins mettre : java SyncMaitre serveurPort repertoireSource repertoireRacine");
 		}else {
 			if(args.length >7){
-				System.out.println("Seule 2 options simultanées sont possibles -w -s, -e -s");
+				System.out.println("Seule 2 options simultanï¿½es sont possibles -w -s, -e -s");
 			}
 			svrNomPort = Integer.parseInt(args[2]);
 			repCible = args[3];
@@ -45,7 +45,7 @@ public class SyncEsclave {
 				if ("pull e".equals(choix) || "pull s".equals(choix) || "pull w".equals(choix)) {
 					z = false;
 				} else
-					System.out.println("Resélectionner le choix :  ");
+					System.out.println("Resï¿½lectionner le choix :  ");
 			}
 			System.out.println("Okay, vous avez choisi de faire un " + choix);
 			socket = new Socket(InetAddress.getLocalHost(), svrNomPort);
