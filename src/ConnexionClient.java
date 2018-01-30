@@ -33,11 +33,11 @@ public class ConnexionClient {
 			// ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-			System.out.println("Entrer 'pseudo motdepasse cheminsource chemindest' separé par un espace : ");
+			System.out.println("Entrer 'pseudo motdepasse cheminsource chemindest port' separé par un espace : ");
 			String requete = in.readLine();
-			String[] separation = new String[5];
+			String[] separation;
 			separation = requete.split(" ");
-			//separation[4] = Integer.toString(port); -------> essayer de recup le port pour le maitre ou esclaves
+			//separation[4] = "" + port; //-------> essayer de recup le port pour le maitre ou esclaves
 			oos.writeObject(separation);
 			oos.flush();
 
@@ -46,6 +46,11 @@ public class ConnexionClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void goToEsclave()
+	{
+		
 	}
 	public int getPort() {
 		return port;

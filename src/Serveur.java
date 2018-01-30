@@ -78,7 +78,7 @@ class ConnexionClients implements Runnable {
 
 		try {
 
-			while (boucle) {
+		
 				socket = socketserver.accept(); // Un client se connecte on l'accepte
 				nbrclient++; // Incrémentation du nombre de clients connectés
 
@@ -114,7 +114,7 @@ class ConnexionClients implements Runnable {
 				//String fileName = objIn.readUTF();
 				//transfertDocument(doc, contenu.getName(), objIn);
 
-			}
+
 
 			// Expections
 		} catch (IOException e) {

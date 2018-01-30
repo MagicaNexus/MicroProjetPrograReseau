@@ -71,11 +71,108 @@ public class SyncMaitre extends SyncEsclave{
 	       
 		    socket.close();
 
-		}catch (UnknownHostException e) {
-			
+			/* transfertDocument(contenu.list() ,contenu.getName(), socket); */
+			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); // Cr�ation d'un objet de sortie
+
+			transfertDocument(contenu.list(), contenu.getName(), out, nomDocs); // Transfert du document --> Changement
+																				// file - contenu
+
+			out.writeUTF(doc[0]);
+
+			Transfer.transfert(new FileInputStream(file), out, false);
+			socket.close();
+
+		} catch (UnknownHostException e) {
+
 			e.printStackTrace();
-		}catch (IOException e) {
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	
+	 /*import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.URI;
+import java.net.UnknownHostException;
+
+import com.sun.org.apache.bcel.internal.generic.PUSH;
+
+//Client de base pris sur OpenClassRoom
+
+public class SyncEsclave extends File {
+
+	public SyncEsclave(URI arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
+	}
+
+	public static void main(String[] args) {
+
+		//R�cup�ration des donn�es
+		int port = Integer.parseInt(args[4]);
+		String pseudo = args[0];
+		String repCible = args[2];
+		String repRacine = args[3];
+		
+		//Cr�ation socket
+		Socket socket;
+
+		try {
+			System.out.println("Je suis l'esclave et je viens de me connecter"); //Confirmation
+			socket = new Socket(InetAddress.getLocalHost(), port); //Connexion � la socket
 			
+			// Transfer.transfert(, new FileOutputStream(/*lieu de
+			// stockage System.getProperty("user.dir") + "/" + "monFichier.txt"), true);
+			
+			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("Choix du mode d'utilisation : ");
+			String mode = in.readLine();
+
+			oos.writeObject(mode);
+			oos.flush();
+
+			/* Push de suppression 
+			if (mode.equals("push -s")) {
+				System.out.println(pseudo + ", vous avez choisi le mode push de suppression !");
+				pushSupp();
+
+			}
+
+			/* Push d'�crasement 
+			if (mode.equals("push -e")) {
+				System.out.println(pseudo +", vous avez choisi le mode push d'�crasement !");
+				pushEcra();
+			}
+
+			/* Push watchdog 
+			else if (mode.equals("push -w")) {
+				System.out.println(pseudo +", vous avez choisi le mode push watchdog !");
+				pushWatchdog();
+			}
+
+			/* Pull 
+			if (mode.equals("pull")) {
+				System.out.println("Esclave, vous avez choisi le mode pull !");
+				pull(repCible, repRacine);
+			}
+
+			else {
+				System.out.println("Mode non reconnu, veuillez vous reconnecter");
+			}
+
+			socket.close();
+
+		} catch (UnknownHostException e) {
+
 			e.printStackTrace();
 		}catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
