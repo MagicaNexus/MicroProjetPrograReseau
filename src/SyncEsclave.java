@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.UnknownHostException;
 
+import com.sun.org.apache.bcel.internal.generic.PUSH;
+
 //Client de base pris sur OpenClassRoom
 
 public class SyncEsclave extends File {
@@ -20,17 +22,22 @@ public class SyncEsclave extends File {
 
 	public static void main(String[] args) {
 
+		//Récupération des données
 		int port = Integer.parseInt(args[4]);
 		String pseudo = args[0];
-		String repCible = args[2], repRacine = args[3];
+		String repCible = args[2];
+		String repRacine = args[3];
+		
+		//Création socket
 		Socket socket;
-		boolean opReussi; // Booleen pour un opération de l'esclave reussie
 
 		try {
-			System.out.println("Je suis l'esclave et je viens de me connecter");
-			socket = new Socket(InetAddress.getLocalHost(), port);
+			System.out.println("Je suis l'esclave et je viens de me connecter"); //Confirmation
+			socket = new Socket(InetAddress.getLocalHost(), port); //Connexion à la socket
+			
 			// Transfer.transfert(/*le contenu du serveur*/, new FileOutputStream(/*lieu de
 			// stockage System.getProperty("user.dir") + "/" + "monFichier.txt"*/), true);
+			
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("Choix du mode d'utilisation : ");
@@ -39,29 +46,10 @@ public class SyncEsclave extends File {
 			oos.writeObject(mode);
 			oos.flush();
 
-			/* Push de suppression */
-			if (mode.equals("push -s")) {
-				System.out.println(pseudo + ", vous avez choisi le mode push de suppression !");
-				// TODO la manipulation quand l'esclave fait un push supp
-
-			}
-
-			/* Push d'écrasement */
-			if (mode.equals("push -e")) {
-				System.out.println(pseudo +", vous avez choisi le mode push d'écrasement !");
-				// TODO la manipulation quand l'esclave fait un push ecrasement
-			}
-
-			/* Push watchdog */
-			if (mode.equals("push -w")) {
-				System.out.println(pseudo +", vous avez choisi le mode push watchdog !");
-				// TODO la manipulation quand l'esclave fait un push watchdog
-			}
-
 			/* Pull */
 			if (mode.equals("pull")) {
 				System.out.println("Esclave, vous avez choisi le mode pull !");
-				// TODO la manipultaion quand l'esclave fait un pull
+				pull(repCible, repRacine);
 			}
 
 			else {
@@ -79,8 +67,29 @@ public class SyncEsclave extends File {
 		}
 	}
 
-	public void pull(String depart, String arrivee) {
+	
+	/************************************************************* M E T H O D E S *************************************************************************/
+	//********************************************************* Méthodes principales ***********************************************************************/
+	
+	public static void pull(String depart, String arrivee) {
 		File origine = new File(depart);
-
+		// TODO la manipultaion quand l'esclave fait un pull
 	}
+	
+	
+	
+	//********************************************************* Méthodes secondaires  ***********************************************************************/
+	
+	public static void suppElementDossier(File DossierSrc)
+	{
+		//On sélectionne tous les fichiers dans le dossier
+		for(File f : DossierSrc.listFiles())
+		{
+			if(f.isDirectory()) //Si le fichier est un dossier
+				suppElementDossier(DossierSrc);
+			DossierSrc.delete(); //Suppression des éléments
+			System.out.println("Elements supprimés"); //Confirmation
+		}
+	}
+	
 }
