@@ -22,7 +22,7 @@ public class SyncMaitre extends SyncEsclave{
 			System.out.println("Il faut au moins mettre : java SyncMaitre serveurPort repertoireSource repertoireRacine");
 		}else {
 			if(args.length >7){
-				System.out.println("Seule 2 options simultanées sont possibles -w -s, -e -s");
+				System.out.println("Seule 2 options simultanï¿½es sont possibles -w -s, -e -s");
 			}
 			svrNomPort = Integer.parseInt(args[2]);
 			repSrc = args[3];
@@ -35,9 +35,9 @@ public class SyncMaitre extends SyncEsclave{
 		}
 		
 		
-		Socket socket; //Création socket 
-		File Source;  //Création d'un dossier maitre
-		File Racine; //Création d'un dossier maitre
+		Socket socket; //Crï¿½ation socket 
+		File Source;  //Crï¿½ation d'un dossier maitre
+		File Racine; //Crï¿½ation d'un dossier maitre
 		
 		/*List<Metadonnee> metadAll = new ArrayList<Metadonnee>();*/ 
 		try {  
@@ -52,16 +52,16 @@ public class SyncMaitre extends SyncEsclave{
 		    		+ "push vers serveur --> watchdog \n"
 		    		+ "pull vers client --> watchdog + ecrasement\n");
 		    
-		    System.out.println("Le mode par défault est watchdog\n");
+		    System.out.println("Le mode par dï¿½fault est watchdog\n");
 		    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 		    String repS = (String) in.readObject();
-		    System.out.println("Repertoire racine envoyé du serveur : \n"+ repS);
+		    System.out.println("Repertoire racine envoyï¿½ du serveur : \n"+ repS);
 		    if(repS.equals(repRacine)) {
 		    	System.out.println("Repertoire racine ok \n");
 		    }else {
 		    	System.out.println("Repertoire racine"+repRacine+"\nremplace par"+ repS +"\n");
 		    	repRacine = repS;
-		    	System.out.println("Repertoire racine modifié : \n"+ repRacine);
+		    	System.out.println("Repertoire racine modifiï¿½ : \n"+ repRacine);
 		    }
 
 	        Source = new File (repSrc);
