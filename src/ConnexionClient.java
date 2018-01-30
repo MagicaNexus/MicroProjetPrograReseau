@@ -37,7 +37,7 @@ public class ConnexionClient {
 			String requete = in.readLine();
 			String[] separation = new String[5];
 			separation = requete.split(" ");
-			//separation[4] = Integer.toString(port); essayer de recup le port pour le maitre ou esclaves
+			//separation[4] = Integer.toString(port); -------> essayer de recup le port pour le maitre ou esclaves
 			oos.writeObject(separation);
 			oos.flush();
 
