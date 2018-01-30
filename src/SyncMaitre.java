@@ -13,9 +13,8 @@ import java.util.ArrayList;
 public class SyncMaitre {
 	
 	public static void main(String[] args) throws InterruptedException {
-		
-		/*int svrNomPort = Integer.parseInt(args[2]);
-		String repSrc = args[3], repRacine = args[4];*/
+		int port = Integer.parseInt(args[4]);
+		String cheminSrc = args[2], cheminDest = args[3];
 		
 		
 		
@@ -60,6 +59,7 @@ public class SyncMaitre {
 	        
 	        
 	        out.writeUTF(doc[0]);
+	        
 	        Transfer.transfert(new FileInputStream(file), out, false);
 		    socket.close();
 
