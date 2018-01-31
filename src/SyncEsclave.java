@@ -23,13 +23,13 @@ public class SyncEsclave extends File {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(ArrayList<String> requete) throws InterruptedException {
 
 		//Récupération des données
-		int port = Integer.parseInt(args[4]);
-		String pseudo = args[0];
-		String repSource = args[2];
-		String repDest = args[3];
+		int port = Integer.parseInt(requete.get(4));
+		String pseudo = requete.get(0);
+		String repSource = requete.get(2);
+		String repDest = requete.get(3);
 		String[] doc = { "ATransferer.txt" };
 		ArrayList<String> nomDocs = new ArrayList();
 		

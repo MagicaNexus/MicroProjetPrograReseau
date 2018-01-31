@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ConnexionClient {
@@ -29,18 +30,24 @@ public class ConnexionClient {
 		try {
 			Socket socket = new Socket(InetAddress.getLocalHost(), port);
 			System.out.println("Connexion réussie ...");
+			
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			// ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-			System.out.println("Entrer 'pseudo motdepasse cheminsource chemindest port' separé par un espace : ");
-			String requete = in.readLine();
+			System.out.println("Entrer 'pseudo motdepasse cheminsource chemindest' separé par un espace : ");
+			String requete = in.readLine() + " " + Integer.toString(port);
+			System.out.println(requete);
 			String[] separation;
+			ArrayList<String> separationf = new ArrayList<String>();
 			separation = requete.split(" ");
-			//separation[4] = "" + port; //-------> essayer de recup le port pour le maitre ou esclaves
-			oos.writeObject(separation);
+			for(int i = 0; i<separation.length;i++)
+			{
+				separationf.add(separation[i]); 
+			}
+			oos.writeObject(separationf);
 			oos.flush();
-
+			System.out.println("a ecrit");
 			socket.close();
 
 		} catch (IOException e) {

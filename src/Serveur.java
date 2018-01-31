@@ -1,7 +1,9 @@
 import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 public class Serveur {
 
@@ -45,10 +47,16 @@ public class Serveur {
 
 		try {
 			// Mise en place d'un serveur
-			socket = new ServerSocket(8082);
-			Thread t = new Thread(new ConnexionClients(socket));
-			t.start(); // Démarrage du Thread
+			socket = new ServerSocket(port);
 			System.out.println("\n\nConnexion réussie. En attente des clients ... ..."); // Confirmation
+			do {
+				Socket sock = socket.accept();
+				/*InputStream strIn = sock.getInputStream();
+				OutputStream strOut = sock.getOutputStream();*/
+				Thread t = new Thread(new ConnexionClients(sock/*, strIn,strOut*/));
+				t.start(); // Démarrage du Thread
+			} while (true);
+			
 
 			// Exceptions
 		} catch (IOException e) {
@@ -61,16 +69,20 @@ public class Serveur {
 class ConnexionClients implements Runnable {
 
 	static File contenu = new File("Serveur"); // Création d'un dossier maitre
-	private ServerSocket socketserver; // Création du ServerSocket
+	//private ServerSocket socketserver; // Création du ServerSocket
 	private Socket socket; // Création de la socket
+	//InputStream strIn;
+	//OutputStream strOut;
 	private int nbrclient = 0; // Initialisation du nombre de clients connectés
 	boolean boucle = true; // Boolean pour le while de la fonction run()
 	public SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); // Formatage de la date - metadonnées
 	String[] doc = { "ATransferer.txt" }; // Création chaine de caractère pour fichier txt
 
 	/* Constructeur */
-	public ConnexionClients(ServerSocket s) {
-		socketserver = s;
+	public ConnexionClients(Socket s /*InputStream strIn1, OutputStream strOut1*/) {
+		socket = s;
+		/*strIn = strIn1;
+		strOut = strOut1;*/
 	}
 
 	// Runnable
@@ -78,32 +90,31 @@ class ConnexionClients implements Runnable {
 
 		try {
 
-		
-				socket = socketserver.accept(); // Un client se connecte on l'accepte
+				//socket = socketserver.accept(); // Un client se connecte on l'accepte
 				nbrclient++; // Incrémentation du nombre de clients connectés
 
 				// Confirmation de connexion du client
 				System.out.println("Nouveau client en cours de connexion .... Client " + nbrclient);
-				InputStream strIn = socket.getInputStream();
+				InputStream strIn = socket.getInputStream();;
 				OutputStream strOut = socket.getOutputStream();
 				ObjectInputStream objIn = new ObjectInputStream(strIn);
 				ObjectOutputStream ObjOut = new ObjectOutputStream(strOut);
 
 				// Tableau de String pour récuperer les données envoyées par le client
-				String[] requete = (String[]) objIn.readObject();
-
+				ArrayList<String> requete = (ArrayList<String>) objIn.readObject();
+				System.out.println("Taille : " + requete.size());
 				// Debug pour savoir si c'est bon ce qu'envoie le client
-				for (int i = 0; i <= 4; i++)
-					System.out.println(requete[i]);
+				for (int i = 0; i <= requete.size(); i++) //4
+					System.out.println(requete.get(i));
 
 				// Identification du client
 				/* RAPPEL : requete[0] = pseudo et requete[1] = mdp */
-				if (requete[0].equals("admin") && requete[1].equals("admin1")) {
+				if (requete.get(0).equals("admin") && requete.get(1).equals("admin1")) {
 					System.out.println("Un maitre est sur le serveur ............");
 					SyncMaitre.main(requete);
 				}
 
-				if (requete[0].equals("client") && requete[1].equals("client1")) {
+				if (requete.get(0).equals("client") && requete.get(0).equals("client1")) {
 					System.out.println("Un client est sur le serveur");
 					SyncEsclave.main(requete);
 				} else {

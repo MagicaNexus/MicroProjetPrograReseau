@@ -12,26 +12,27 @@ import java.util.ArrayList;
 
 public class SyncMaitre {
 	
-	public static void main(String[] args) throws InterruptedException {
-		int port = Integer.parseInt(args[4]);
-		String cheminSrc = args[2], cheminDest = args[3];
+	public static void main(ArrayList<String> requete) throws InterruptedException {
+		int port = Integer.parseInt(requete.get(4));
+		String cheminSrc = requete.get(2), cheminDest = requete.get(2);
 
 		Socket socket; // Création socket
 		File contenu = new File("Maitre"); // Création d'un dossier maitre
+		File source = new File(cheminSrc);
 		File file = new File("Maitre\\ATransferer.txt"); // Création d'un nouveau fichier tkt atranferer
 		String[] doc = { "ATransferer.txt" }; // Tableau de string contenant le nom du fichier créé
-		ArrayList<String> nomDocs = new ArrayList();
-		String test = "H:\\Mes documents\\4A\\programation reseaux, concurrente et distribuée\\MicroProjet\\MicroProjetPrograReseau\\Maitre\\test\\test2\\test2ception.txt";
+		ArrayList<String> nomDocs = new ArrayList<String>();
+		/*String test = "H:\\Mes documents\\4A\\programation reseaux, concurrente et distribuée\\MicroProjet\\MicroProjetPrograReseau\\Maitre\\test\\test2\\test2ception.txt";
 		test.replaceAll(
 				"H:\\Mes documents\\4A\\programation reseaux, concurrente et distribuée\\MicroProjet\\MicroProjetPrograReseau\\",
 				"");
-		System.out.println("test regex java" + test);
+		System.out.println("test regex java" + test);*/
 		try {
 
 			// Connexion du maitre
 			System.out.println("Je suis le Maitre et je viens de me connecter");
 			// Attribution de l'adresse et du oprt de la socket
-			socket = new Socket(InetAddress.getLocalHost(), 8082/* svrNomPort */);
+			socket = new Socket(InetAddress.getLocalHost(), port/* svrNomPort */);
 
 			// Choix du mode de transfert
 			System.out.println(
@@ -42,9 +43,12 @@ public class SyncMaitre {
 							+ "3 : mode watchdog ou un fichier existant deja dans le repertoire destination"
 							+ " est ecrase uniquement par une version plus recente du fichier du repertoire source.\n");
 
+			
 			// boolean En cas de repertoire
 			System.out.println("Est un repertoire : " + contenu.isDirectory());
-
+			System.out.println(contenu.getAbsolutePath().replace(System.getProperty("user.dir"), ""));
+			System.out.println(file.getAbsolutePath().replace(System.getProperty("user.dir"), ""));
+			
 			// Affichage du contenu du repertoire
 			System.out.println("Qui contient :");
 			afficheDocument(contenu.list(), contenu.getName());
@@ -228,7 +232,7 @@ public class SyncEsclave extends File {
 			}
 			Thread.sleep(1000);
 			out.writeUTF(path); 
-			Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
+			Metadonnee m = new Metadonnee (f.getName(), "coucou"/*f.getCanonicalPath().replace(System.getProperty("user.dir"), "")*/,f.length(),f.lastModified());
 			System.out.println("Date de derniere modification vu par le fichier: " + sdf.format(f.lastModified()));
 			System.out.println("Date de derniere modification de la metadonnée : " + sdf.format(m.dateM));
 			Thread.sleep(1000);
