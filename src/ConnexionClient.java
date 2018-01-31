@@ -41,11 +41,12 @@ public class ConnexionClient {
 			String[] separation;
 			ArrayList<String> separationf = new ArrayList<String>();
 			separation = requete.split(" ");
-			for(int i = 0; i<separation.length;i++)
+			/*for(int i = 0; i<=separation.length;i++)
 			{
 				separationf.add(separation[i]); 
-			}
-			oos.writeObject(separationf);
+				System.out.println(separationf.get(i));
+			}*/
+			oos.writeObject(separation);
 			oos.flush();
 			System.out.println("a ecrit");
 			socket.close();

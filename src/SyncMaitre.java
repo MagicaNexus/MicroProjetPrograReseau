@@ -221,7 +221,7 @@ public class SyncEsclave extends File {
 		{
 			File f = new File (parent+"\\"+path);
 			//Debug
-			//nomDocs.add(f.);
+			nomDocs.add(f.getName());
 			System.out.println("Création du fichier à l'emplacement suivant : " +parent+"\\"+path);
 			if (f.isDirectory())
 			{

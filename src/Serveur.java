@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
@@ -95,18 +96,25 @@ class ConnexionClients implements Runnable {
 
 				// Confirmation de connexion du client
 				System.out.println("Nouveau client en cours de connexion .... Client " + nbrclient);
-				InputStream strIn = socket.getInputStream();;
+				InputStream strIn = socket.getInputStream();
 				OutputStream strOut = socket.getOutputStream();
 				ObjectInputStream objIn = new ObjectInputStream(strIn);
 				ObjectOutputStream ObjOut = new ObjectOutputStream(strOut);
-
+				System.out.println("Passé");
 				// Tableau de String pour récuperer les données envoyées par le client
-				ArrayList<String> requete = (ArrayList<String>) objIn.readObject();
+				String[] requete1 = (String[]) objIn.readObject();
+				System.out.println("Recupere");
+				ArrayList<String> requete = new ArrayList<String>();
+				for(int i = 0; i<requete1.length;i++)
+				{
+					requete.add(requete1[i]); 
+					System.out.println(requete.get(i));
+				}
 				System.out.println("Taille : " + requete.size());
 				// Debug pour savoir si c'est bon ce qu'envoie le client
-				for (int i = 0; i <= requete.size(); i++) //4
+				/*for (int i = 0; i <= requete.size(); i++) {//4
 					System.out.println(requete.get(i));
-
+				}*/
 				// Identification du client
 				/* RAPPEL : requete[0] = pseudo et requete[1] = mdp */
 				if (requete.get(0).equals("admin") && requete.get(1).equals("admin1")) {
