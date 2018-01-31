@@ -18,7 +18,9 @@ public class SyncMaitre {
 
 		Socket socket; // Création socket
 		File contenu = new File("Maitre"); // Création d'un dossier maitre
-		File source = new File(cheminSrc);
+		
+		File source = new File(System.getProperty("user.dir"),"\\source");
+		source.mkdirs();
 		File file = new File("Maitre\\ATransferer.txt"); // Création d'un nouveau fichier tkt atranferer
 		String[] doc = { "ATransferer.txt" }; // Tableau de string contenant le nom du fichier créé
 		ArrayList<String> nomDocs = new ArrayList<String>();
@@ -221,7 +223,7 @@ public class SyncEsclave extends File {
 		{
 			File f = new File (parent+"\\"+path);
 			//Debug
-			nomDocs.add(f.getName());
+			//nomDocs.add(f.getName());
 			System.out.println("Création du fichier à l'emplacement suivant : " +parent+"\\"+path);
 			if (f.isDirectory())
 			{
@@ -232,7 +234,7 @@ public class SyncEsclave extends File {
 			}
 			Thread.sleep(1000);
 			out.writeUTF(path); 
-			Metadonnee m = new Metadonnee (f.getName(), "coucou"/*f.getCanonicalPath().replace(System.getProperty("user.dir"), "")*/,f.length(),f.lastModified());
+			Metadonnee m = new Metadonnee (f.getName(), f.getCanonicalPath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified());
 			System.out.println("Date de derniere modification vu par le fichier: " + sdf.format(f.lastModified()));
 			System.out.println("Date de derniere modification de la metadonnée : " + sdf.format(m.dateM));
 			Thread.sleep(1000);

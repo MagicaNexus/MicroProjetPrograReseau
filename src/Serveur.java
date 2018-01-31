@@ -122,7 +122,7 @@ class ConnexionClients implements Runnable {
 					SyncMaitre.main(requete);
 				}
 
-				if (requete.get(0).equals("client") && requete.get(0).equals("client1")) {
+				if (requete.get(0).equals("client") && requete.get(1).equals("client1")) {
 					System.out.println("Un client est sur le serveur");
 					SyncEsclave.main(requete);
 				} else {
