@@ -15,6 +15,11 @@ public class Metadonnee implements Serializable {
 		dateM = date;	
 	}
 	
+	public void setChemin(String chem)
+	{
+		chemin = chem;
+	}
+	
 	public String toString() {
 		String meta;
 		 meta  = nom + " est dans l'emplacement suivant : \n" + chemin 

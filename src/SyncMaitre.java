@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 //Client de base pris sur OpenClassRoom
 
@@ -19,12 +20,11 @@ public class SyncMaitre {
 		String repSrc = args[3], repRacine = args[4];*/
 		
 		
-		
 		Socket socket; //Création socket 
 		File contenu = new File ("Maitre"); //Création d'un dossier maitre
 		File file = new File("Maitre\\ATransferer.txt"); //Création d'un nouveau fichier tkt atranferer
 		String[] doc = {"ATransferer.txt"}; //Tableau de string contenant le nom du fichier créé
-		//ArrayList<String> nomDocs = new ArrayList<String>(); 
+		List<Metadonnee> metadAll = new ArrayList<Metadonnee>();
 		try {  
 			
 			//Connexion du maitre
@@ -42,7 +42,7 @@ public class SyncMaitre {
 		    		+ " est ecrase uniquement par une version plus recente du fichier du repertoire source.\n");*/
 		    
 		    //boolean En cas de repertoire
-			System.out.println("Est un repertoire : " + contenu.isDirectory());
+			//System.out.println("Est un repertoire : " + contenu.isDirectory());
 			
 			//Affichage du contenu du repertoire
 			/*System.out.println("Qui contient :");
@@ -53,14 +53,17 @@ public class SyncMaitre {
 	        
 	        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); //Création d'un objet de sortie
 	        
+	        transfertChemin(contenu.listFiles() ,contenu.getName(), metadAll);
+	        System.out.println(metadAll.size());
+	        out.writeObject(metadAll);
+	        out.flush();
+	        transfertDocument(contenu.listFiles(),out); //Transfert du document --> Changement file - contenu
 	        
-	        transfertDocument(contenu.listFiles(),contenu.getName(),out); //Transfert du document --> Changement file - contenu
-	        
-	        out.writeUTF(file.getName());
+	        /*out.writeUTF(file.getName());
 	        out.flush();
 	       
 			
-	        Transfer.transfert(new FileInputStream(file), out, false);
+	        Transfer.transfert(new FileInputStream(file), out, false);*/
 		    socket.close();
 
 		}catch (UnknownHostException e) {
@@ -71,31 +74,56 @@ public class SyncMaitre {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void transfertChemin(File[] paths ,String parent, List<Metadonnee> metaAll) throws IOException, InterruptedException
+	{
+		System.out.println("\n---- Début du transfert du chemin......................");
+		System.out.println("Affichage du parent : " + paths.length);
+		
+		for(File f:paths) 
+		{
+			
+				System.out.println("Création du fichier à l'emplacement suivant : " +f.getAbsolutePath());
+				if (f.isDirectory())
+				{
+					parent += "\\" + f.getName();
+					transfertChemin(f.listFiles(),parent, metaAll);
+					//debug
+					System.out.println("Changement de repertoire réussi : " + parent);
+				}
+				metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified()));
+				//debug
+				System.out.println("\n\nCréation métadonnées ok\n\n");		
+				System.out.println("\n\nFin du transfert .........................................");
+			
+			
+         }
+	}
 
-	public static void transfertDocument(File[] paths ,String parent, ObjectOutputStream out) throws IOException, InterruptedException
+	public static void transfertDocument(File[] paths , ObjectOutputStream out) throws IOException, InterruptedException
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
 		System.out.println("\n---- Début du transfert......................");
-		System.out.println("Affichage du parent : " + parent);
+		
 		for(File f:paths) 
 		{
 			System.out.println("Création du fichier à l'emplacement suivant : " +f.getAbsolutePath());
 			if (f.isDirectory())
 			{
-				parent += "\\" + f.getName();
-				transfertDocument(f.listFiles(),parent, out );
+				
+				transfertDocument(f.listFiles(), out );
 				//debug
-				System.out.println("Changement de repertoire réussi : " + parent);
+				System.out.println("Changement de repertoire réussi : " + f.getName());
 			}
 			
-			Metadonnee m = new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified());
+			/*Metadonnee m = new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified());
 			System.out.println(m.toString());
 			
 			out.writeObject(m);
 			out.flush();
 			//debug
-			System.out.println("\n\nCréation métadonnées ok\n\n");
+			System.out.println("\n\nCréation métadonnées ok\n\n");*/
 		
 			Transfer.transfert(new FileInputStream(f), out, false);
 			
