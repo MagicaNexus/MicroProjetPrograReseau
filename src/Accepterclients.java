@@ -36,20 +36,6 @@ public class Accepterclients implements Runnable
 				Object meta = in.readObject();
 				metadAll = (List<Metadonnee>) meta;
 				recupereDocument(metadAll,contenu,in);
-				
-				/*Object meta = in.readObject();
-				Metadonnee met = (Metadonnee) meta;
-				System.out.println(met.nom);
-				File file = new File( parent ,met.nom);
-				System.out.println(file.getAbsolutePath());*/
-				
-				/*meta = in.readObject();
-				met = (Metadonnee) meta;
-				System.out.println(met.nom);
-				file = new File( parent ,met.nom);
-				System.out.println(file.getAbsolutePath());*/
-				/*transfertDocument(doc,contenu.getName(),in);*/
-				//Transfer.transfert(in, new FileOutputStream(file), false);
 				socket.close();
 			}
 		} catch (IOException e) {
@@ -59,7 +45,6 @@ public class Accepterclients implements Runnable
 			e.printStackTrace();
 		}
 	}
-
 
 	public static void recupereDocument(List<Metadonnee> m,File contenu,ObjectInputStream in) throws ClassNotFoundException, IOException
 	{
@@ -75,44 +60,19 @@ public class Accepterclients implements Runnable
 			{
 				boolean oui = f.mkdir();
 				f.setLastModified(m.get(i).dateM);
-				Transfer.transfert(in, new FileOutputStream(f), false);
+				
 			} else {
 				f.createNewFile();
 				f.setLastModified(m.get(i).dateM);
-				Transfer.transfert(in, new FileOutputStream(f), false);
+				 FileOutputStream out = new FileOutputStream(f);
+				 for (int j = 0;j<m.get(i).co.length;j++)
+					{
+						out.write(m.get(i).co[j]);
+					}
+					
+				
 			}
 		}
-		//Transfer.transfert(new FileInputStream(f), out, false);	
-	}
-	
-	/*public static void recupereDocument(String[] paths, String parent, ObjectInputStream in)
-			throws IOException, ClassNotFoundException {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		System.out.println("---- Début du transfert......................");
-		System.out.println("Affichage du chemin : " + paths);
-		System.out.println("Affichage du parent : " + parent);
 		
-		System.out.println("Date de derniere modification de la metadonnée : " + sdf.format(m.dateM));
-		
-		
-		for (String path : paths) {
-			File f = new File(, m.nom);
-			// Debug
-			System.out.println("Création du fichier à l'emplacement suivant : " + parent + "\\" + path);
-			if (f.isDirectory()) {
-				parent += "\\" + f.getName();
-				transfertDocument(f.list(), f.getName(), in);
-				// debug
-				System.out.println("Changement de repertoire réussi : " + parent);
-			}
-
-			// debug
-			System.out.println("\n\nCréation métadonnées ok\n\n");
-			Transfer.transfert(in, new FileOutputStream(f), false);
-			f.setLastModified(m.dateM);
-			System.out.println("Date modif du fichier : " + sdf.format(f.lastModified()));
-
-			System.out.println("\n\nFin du transfert .........................................");
-		}*/
-	
+	}	
 }

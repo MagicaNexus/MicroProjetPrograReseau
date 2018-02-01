@@ -24,7 +24,7 @@ public class SyncMaitre {
 		File contenu = new File ("Maitre"); //Création d'un dossier maitre
 		File file = new File("Maitre\\ATransferer.txt"); //Création d'un nouveau fichier tkt atranferer
 		String[] doc = {"ATransferer.txt"}; //Tableau de string contenant le nom du fichier créé
-		List<Metadonnee> metadAll = new ArrayList<Metadonnee>();
+		List<Metadonnee> metadAll = new ArrayList<Metadonnee>(); 
 		try {  
 			
 			//Connexion du maitre
@@ -57,13 +57,7 @@ public class SyncMaitre {
 	        System.out.println(metadAll.size());
 	        out.writeObject(metadAll);
 	        out.flush();
-	        transfertDocument(contenu.listFiles(),out); //Transfert du document --> Changement file - contenu
-	        
-	        /*out.writeUTF(file.getName());
-	        out.flush();
 	       
-			
-	        Transfer.transfert(new FileInputStream(file), out, false);*/
 		    socket.close();
 
 		}catch (UnknownHostException e) {
@@ -91,7 +85,19 @@ public class SyncMaitre {
 					//debug
 					System.out.println("Changement de repertoire réussi : " + parent);
 				}
-				metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified()));
+				byte buf[] = new byte[1024];
+			    int taille;
+			    String message = "";
+			    
+			    FileInputStream in = new FileInputStream(f);
+				taille=in.read(buf);
+				byte mes[] = new byte[taille];
+				for (int i = 0;i<taille;i++)
+				{
+					message += (char)buf[i];
+					mes[i] = buf[i];
+				}
+				metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified(),message, mes));
 				//debug
 				System.out.println("\n\nCréation métadonnées ok\n\n");		
 				System.out.println("\n\nFin du transfert .........................................");
@@ -100,38 +106,6 @@ public class SyncMaitre {
          }
 	}
 
-	public static void transfertDocument(File[] paths , ObjectOutputStream out) throws IOException, InterruptedException
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		
-		System.out.println("\n---- Début du transfert......................");
-		
-		for(File f:paths) 
-		{
-			System.out.println("Création du fichier à l'emplacement suivant : " +f.getAbsolutePath());
-			if (f.isDirectory())
-			{
-				
-				transfertDocument(f.listFiles(), out );
-				//debug
-				System.out.println("Changement de repertoire réussi : " + f.getName());
-			}
-			
-			/*Metadonnee m = new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified());
-			System.out.println(m.toString());
-			
-			out.writeObject(m);
-			out.flush();
-			//debug
-			System.out.println("\n\nCréation métadonnées ok\n\n");*/
-		
-			Transfer.transfert(new FileInputStream(f), out, false);
-			
-			System.out.println("\n\nFin du transfert .........................................");
-         }
-		out.close();
-	}
-	
 	public static void afficheDocument(String[] paths ,String parent) throws IOException
 	{
 		System.out.println("Parent : " + parent);
@@ -142,12 +116,12 @@ public class SyncMaitre {
 				parent += "\\" + f.getName();
 				afficheDocument(f.list(),parent);
 			}
-            afficheMetaDonnee(f);
+            //afficheMetaDonnee(f);
          }
 		System.out.println("\n\nFin de l'affichage .........................................");
 	}
 	
-	public static void afficheMetaDonnee(File f) throws IOException
+	/*public static void afficheMetaDonnee(File f) throws IOException
 	{
 		 Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
 		 System.out.println(m.toString());
@@ -158,5 +132,5 @@ public class SyncMaitre {
 		 System.out.println(m.toString());
 		 return m;
 		 
-	}
+	}*/
 }

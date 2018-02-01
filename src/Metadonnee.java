@@ -8,11 +8,15 @@ public class Metadonnee implements Serializable {
 	public double tailleB;
 	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     public long dateM;
-	public Metadonnee(String fileName, String chem, double tail,long date ) {
+    public String contenu;
+    public byte[] co;
+	public Metadonnee(String fileName, String chem, double tail,long date ,String cont,byte[] con) {
 		nom = fileName;
 		chemin = chem;
 		tailleB = tail;
 		dateM = date;	
+		contenu = cont;
+		co = con;
 	}
 	
 	public void setChemin(String chem)

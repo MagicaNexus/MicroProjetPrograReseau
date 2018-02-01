@@ -24,7 +24,7 @@ public class SyncServeur {
 				
 			} catch (IOException e) {
 				
-				e.printStackTrace(); 
+				e.printStackTrace();  
 			}
 		}
 	}
