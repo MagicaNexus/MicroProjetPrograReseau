@@ -9,43 +9,56 @@ public class Accepterclients implements Runnable
 
 {
 
-	static File contenu = new File("Serveur"); // Création d'un dossier maitre
+	File contenu = new File("Serveur"); // Création d'un dossier maitre
+	boolean oui = contenu.mkdirs();
 	private ServerSocket socketserver;
 	private Socket socket;
-	private int nbrclient = 1;
 	public SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	String[] doc = {"ATransferer.txt"};
+	String[] doc = {"ATransferer.txt"}; 
 
 	public Accepterclients(ServerSocket s) {
 		socketserver = s;
 	}
 
 	public void run() {
-
+ 
 		try {
 			while (true) {
 				socket = socketserver.accept(); // Un client se connecte on l'accepte => Pas d'identification encore
-				System.out.println("Le client numéro " + nbrclient + " est connecté !");
-				nbrclient++;
-				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-				String fileName = in.readUTF();
-				transfertDocument(doc,contenu.getName(),in);
 				
-				/*Je me suis perdu ici et c'est la fin du cours, a voir si ma fonction est bonne ou pas !*/
-
+				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+				String parent = contenu.getName()+ "\\";
+				Object meta = in.readObject();
+				Metadonnee met = (Metadonnee) meta;
+				System.out.println(met.nom);
+				
+				File file = new File( parent ,met.nom);
+				System.out.println(file.getAbsolutePath());
+				/*transfertDocument(doc,contenu.getName(),in);*/
+				//Transfer.transfert(in, new FileOutputStream(file), false);
 				socket.close();
-
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	} 
 
-	public static void transfertDocument(String[] paths, String parent, ObjectInputStream in)
+	public static void recupereDocument(ObjectInputStream in) throws ClassNotFoundException, IOException
+	{
+		Object meta = in.readObject();
+		Metadonnee met = (Metadonnee) meta;
+		System.out.println(met.nom);
+		System.out.println("\n\nCréation métadonnées ok\n\n");
+		
+		
+		
+		//Transfer.transfert(new FileInputStream(f), out, false);
+		
+	}
+	/*public static void recupereDocument(String[] paths, String parent, ObjectInputStream in)
 			throws IOException, ClassNotFoundException {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Metadonnee m = (Metadonnee) in.readObject();
@@ -58,7 +71,7 @@ public class Accepterclients implements Runnable
 		
 		
 		for (String path : paths) {
-			File f = new File(contenu.getName(), m.nom);
+			File f = new File(, m.nom);
 			// Debug
 			System.out.println("Création du fichier à l'emplacement suivant : " + parent + "\\" + path);
 			if (f.isDirectory()) {
@@ -75,6 +88,6 @@ public class Accepterclients implements Runnable
 			System.out.println("Date modif du fichier : " + sdf.format(f.lastModified()));
 
 			System.out.println("\n\nFin du transfert .........................................");
-		}
-	}
+		}*/
+	
 }

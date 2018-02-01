@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -23,11 +24,8 @@ public class SyncMaitre {
 		File contenu = new File ("Maitre"); //Création d'un dossier maitre
 		File file = new File("Maitre\\ATransferer.txt"); //Création d'un nouveau fichier tkt atranferer
 		String[] doc = {"ATransferer.txt"}; //Tableau de string contenant le nom du fichier créé
-		ArrayList<String> nomDocs = new ArrayList();
-		String test = "H:\\Mes documents\\4A\\programation reseaux, concurrente et distribuée\\MicroProjet\\MicroProjetPrograReseau\\Maitre\\test\\test2\\test2ception.txt";
-		test.replaceAll("H:\\Mes documents\\4A\\programation reseaux, concurrente et distribuée\\MicroProjet\\MicroProjetPrograReseau\\", "");
-		System.out.println("test regex java" + test);
-		try {
+		//ArrayList<String> nomDocs = new ArrayList<String>(); 
+		try {  
 			
 			//Connexion du maitre
 			System.out.println("Je suis le Maitre et je viens de me connecter");
@@ -35,31 +33,33 @@ public class SyncMaitre {
 		    socket = new Socket(InetAddress.getLocalHost(),8082/*svrNomPort*/);	
 		    
 		    //Choix du mode de transfert
-		    System.out.println("Choix du mode de transfert de fichier :\n"
+		    /*System.out.println("Choix du mode de transfert de fichier :\n"
 		    		+ "1 : mode ecrasement fichier existant deja dans "
 		    		+ "le repertoire destination est ecrase par le fichier du repertoire source.\n"
 		    		+ "2 : mode suppression ou un fichier existant dans le repertoire destination "
 		    		+ "mais pas dans le repertoire source est supprime dans le repertoire destination.\n"
 		    		+ "3 : mode watchdog ou un fichier existant deja dans le repertoire destination"
-		    		+ " est ecrase uniquement par une version plus recente du fichier du repertoire source.\n");
+		    		+ " est ecrase uniquement par une version plus recente du fichier du repertoire source.\n");*/
 		    
 		    //boolean En cas de repertoire
 			System.out.println("Est un repertoire : " + contenu.isDirectory());
 			
 			//Affichage du contenu du repertoire
-			System.out.println("Qui contient :");
+			/*System.out.println("Qui contient :");
 	        afficheDocument(contenu.list(),contenu.getName());
-	        System.out.println("Confirmation fin affichage...................\n\n\n");
+	        System.out.println("Confirmation fin affichage...................\n\n\n");*/
 	        
 	        
-	        /*transfertDocument(contenu.list() ,contenu.getName(), socket);*/
+	        
 	        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); //Création d'un objet de sortie
 	        
 	        
-	        transfertDocument(contenu.list(),contenu.getName(),out,nomDocs); //Transfert du document --> Changement file - contenu
+	        transfertDocument(contenu.listFiles(),contenu.getName(),out); //Transfert du document --> Changement file - contenu
 	        
-	        
-	        out.writeUTF(doc[0]);
+	        out.writeUTF(file.getName());
+	        out.flush();
+	       
+			
 	        Transfer.transfert(new FileInputStream(file), out, false);
 		    socket.close();
 
@@ -72,42 +72,38 @@ public class SyncMaitre {
 		}
 	}
 
-	public static void transfertDocument(String[] paths ,String parent, ObjectOutputStream out, ArrayList<String> nomDocs) throws IOException, InterruptedException
+	public static void transfertDocument(File[] paths ,String parent, ObjectOutputStream out) throws IOException, InterruptedException
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
 		System.out.println("\n---- Début du transfert......................");
-		System.out.println("Affichage du chemin : " + paths);
 		System.out.println("Affichage du parent : " + parent);
-		for(String path:paths) 
+		for(File f:paths) 
 		{
-			File f = new File (parent+"\\"+path);
-			//Debug
-			//nomDocs.add(f.);
-			System.out.println("Création du fichier à l'emplacement suivant : " +parent+"\\"+path);
+			System.out.println("Création du fichier à l'emplacement suivant : " +f.getAbsolutePath());
 			if (f.isDirectory())
 			{
 				parent += "\\" + f.getName();
-				transfertDocument(f.list(),parent, out, nomDocs);
+				transfertDocument(f.listFiles(),parent, out );
 				//debug
 				System.out.println("Changement de repertoire réussi : " + parent);
 			}
-			Thread.sleep(1000);
-			out.writeUTF(path); 
-			Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
-			System.out.println("Date de derniere modification vu par le fichier: " + sdf.format(f.lastModified()));
-			System.out.println("Date de derniere modification de la metadonnée : " + sdf.format(m.dateM));
-			Thread.sleep(1000);
+			
+			Metadonnee m = new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified());
+			System.out.println(m.toString());
+			
 			out.writeObject(m);
+			out.flush();
 			//debug
 			System.out.println("\n\nCréation métadonnées ok\n\n");
-			Thread.sleep(1000);
+		
 			Transfer.transfert(new FileInputStream(f), out, false);
 			
 			System.out.println("\n\nFin du transfert .........................................");
          }
 		out.close();
 	}
+	
 	public static void afficheDocument(String[] paths ,String parent) throws IOException
 	{
 		System.out.println("Parent : " + parent);
