@@ -11,15 +11,13 @@ public class Accepterclients implements Runnable{
 		serv = repRacine;
 	}
 	public void run() {
- 
 		try {
 			while (true) {
 				socket = socketserver.accept(); // Un client se connecte on l'accepte => Pas d'identification encore
-				
-				
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 				out.writeObject(serv);
 				out.flush();
+				out.close();
 				socket.close();
 			}
 		} catch (IOException e) {

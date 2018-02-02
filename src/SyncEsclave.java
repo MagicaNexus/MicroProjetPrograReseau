@@ -8,17 +8,17 @@ import java.util.Scanner;
 
 public class SyncEsclave {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws IOException {
+		
 		int svrNomPort = 0;
 		String repCible = null, repRacine = null;
-		String options ="";
+		String options =""; 
 		if (args.length <5)
 		{
 			System.out.println("Il faut au moins mettre : java SyncMaitre serveurPort repertoireSource repertoireRacine");
 		}else {
 			if(args.length >7){
-				System.out.println("Seule 2 options simultan�es sont possibles -w -s, -e -s");
+				System.out.println("Seule 2 options simultanees sont possibles -w -s, -e -s");
 			}
 			svrNomPort = Integer.parseInt(args[2]);
 			repCible = args[3];
@@ -31,8 +31,9 @@ public class SyncEsclave {
 		}
 		
 		Socket socket;
-		File source = new File(repRacine);
-		File dest = new File(repCible);
+		File source;
+		File dest;
+		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
 		boolean z = true;
 		String choix = null;
@@ -45,11 +46,24 @@ public class SyncEsclave {
 				if ("pull e".equals(choix) || "pull s".equals(choix) || "pull w".equals(choix)) {
 					z = false;
 				} else
-					System.out.println("Res�lectionner le choix :  ");
+					System.out.println("Reselectionner le choix :  ");
 			}
 			System.out.println("Okay, vous avez choisi de faire un " + choix);
 			socket = new Socket(InetAddress.getLocalHost(), svrNomPort);
 
+			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+	        String repS = (String) in.readObject();
+	        System.out.println("Repertoire racine envoye du serveur : \n"+ repS);
+	        if(repS.equals(repRacine)) {
+	          System.out.println("Repertoire racine ok \n");
+	        }else {
+	          System.out.println("Repertoire racine"+repRacine+"\nremplace par"+ repS +"\n");
+	          repRacine = repS;
+	          System.out.println("Repertoire racine modifie : \n"+ repRacine);
+	        }
+	        source = new File(repRacine);
+			dest = new File(repCible);
+			
 			if ("pull e".equals(choix)) {
 				pullE(source, dest);
 			}
@@ -71,6 +85,9 @@ public class SyncEsclave {
 		} catch (IOException e) {
 
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -80,33 +97,20 @@ public class SyncEsclave {
 
 	// PULL S EST OK
 	public static void pullS(File source, File dest) throws IOException {
-
 		viderDossier(dest);
 		copyDirectory(source, dest);
-
 	}
 
 	public static void pullW(File source, File dest) throws IOException {
-
 		copyDirectoryWatchdog(source, dest);
-
 	}
 
-	public static void viderDossier(File D)
-
-	{
-
-		for (File f : D.listFiles())
-
-		{
-
+	public static void viderDossier(File D){
+		for (File f : D.listFiles()){
 			if (f.isDirectory())
 				viderDossier(f);
-
 			f.delete();
-
 		}
-
 	}
 
 	public static void copy(final InputStream inStream, final OutputStream outStream, final int bufferSize)
