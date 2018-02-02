@@ -3,21 +3,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.URI;
 import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Scanner;
-
-//Client de base pris sur OpenClassRoom
 
 public class SyncEsclave {
 
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 
-		int svrNomPort = Integer.parseInt(args[2]);
-		String repCible = args[3], repRacine = args[4];
+		int svrNomPort = 0;
+		String repCible = null, repRacine = null;
+		String options ="";
+		if (args.length <5)
+		{
+			System.out.println("Il faut au moins mettre : java SyncMaitre serveurPort repertoireSource repertoireRacine");
+		}else {
+			if(args.length >7){
+				System.out.println("Seule 2 options simultanées sont possibles -w -s, -e -s");
+			}
+			svrNomPort = Integer.parseInt(args[2]);
+			repCible = args[3];
+			repRacine = args[4];
+			for(int i = 5;i<args.length;i++)
+			{
+				options += args[i];
+			}
+			System.out.println("Les options sont :" + options);
+		}
+		
 		Socket socket;
 		File source = new File(repRacine);
 		File dest = new File(repCible);
@@ -145,7 +157,4 @@ public class SyncEsclave {
 				copy(file, new File(to, file.getName()));
 		}
 	}
-	
-	
-
 }

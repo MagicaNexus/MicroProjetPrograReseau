@@ -1,22 +1,15 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
-
-//Client de base pris sur OpenClassRoom
 
 public class SyncMaitre extends SyncEsclave{
 	
@@ -71,27 +64,10 @@ public class SyncMaitre extends SyncEsclave{
 		    	System.out.println("Repertoire racine modifié : \n"+ repRacine);
 		    }
 
-		    //boolean En cas de repertoire
-			//System.out.println("Est un repertoire : " + contenu.isDirectory());
-			
-			//Affichage du contenu du repertoire
-			/*System.out.println("Qui contient :");
-	        afficheDocument(contenu.list(),contenu.getName());
-	        System.out.println("Confirmation fin affichage...................\n\n\n");*/
 	        Source = new File (repSrc);
 		    Racine = new File (repRacine);
 		    copyDirectory(Source , Racine);
 	        
-	        
-	        /*ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); //Création d'un objet de sortie
-	        
-	        out.writeObject(contenu);
-	        out.flush();
-	        
-	        transfertChemin(contenu.listFiles() ,contenu.getName(), metadAll);
-	        System.out.println(metadAll.size());
-	        out.writeObject("Nombre de fichiers : "+metadAll);
-	        out.flush();*/
 	       
 		    socket.close();
 
@@ -101,10 +77,7 @@ public class SyncMaitre extends SyncEsclave{
 		}catch (IOException e) {
 			
 			e.printStackTrace();
-		} /*catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/ catch (ClassNotFoundException e) {
+		}catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -147,131 +120,4 @@ public class SyncMaitre extends SyncEsclave{
 			throw new FileNotFoundException(from.toString() + " does not exist");
 		}
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public static void transfertChemin(File[] paths ,String parent, List<Metadonnee> metaAll) throws IOException, InterruptedException
-	{
-		System.out.println("\n---- Début du transfert du chemin......................");
-		System.out.println("Affichage de la taille : " + paths.length);
-		
-		for(File f:paths) 
-		{
-			
-				System.out.println("Création du fichier dans" + f.getParent() + f.getName() +"à l'emplacement suivant : \n" +f.getAbsolutePath());
-				if (f.isDirectory())
-				{
-					//parent += "\\" + f.getName();
-					metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified(),null, null));
-					transfertChemin(f.listFiles(),f.getAbsolutePath() /*parent*/, metaAll);
-					//debug
-					System.out.println("Changement de repertoire réussi : " + parent);
-				} else {
-					System.out.println("Taille du fichier : " + f.length());
-				    
-					if (f.length() > 0)
-					{
-						byte buf[] = new byte[1024];
-					    int taille;
-					    String message = "";
-						FileInputStream in = new FileInputStream(f);
-						taille=in.read(buf);
-						byte mes[] = new byte[taille];
-						for (int i = 0;i<taille;i++)
-						{
-							message += (char)buf[i]; 
-							mes[i] = buf[i];
-						}
-						metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified(),message, mes));
-					}else {
-						System.out.println("Objet vide");
-						//metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified(),null, null));
-					}
-					
-				}
-				
-				//debug
-				System.out.println("\n\nCréation métadonnées ok\n\n");		
-				System.out.println("\n\nFin du transfert .........................................");
-			
-			
-         }
-	}
-
-	public static void afficheDocument(String[] paths ,String parent) throws IOException
-	{
-		System.out.println("Parent : " + parent);
-		for(String path:paths) {
-			File f = new File (parent+"\\"+path);
-			if (f.isDirectory())
-			{
-				parent += "\\" + f.getName();
-				afficheDocument(f.list(),parent);
-			}
-            //afficheMetaDonnee(f);
-         }
-		System.out.println("\n\nFin de l'affichage .........................................");
-	}
-	
-	/*public static void afficheMetaDonnee(File f) throws IOException
-	{
-		 Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
-		 System.out.println(m.toString());
-	}
-	public static Metadonnee transfertMetaDonnee(File f) throws IOException
-	{
-		 Metadonnee m = new Metadonnee (f.getName(),f.getCanonicalPath(),f.length(),f.lastModified());
-		 System.out.println(m.toString());
-		 return m;
-		 
-	}*/
 }

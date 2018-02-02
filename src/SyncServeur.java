@@ -1,9 +1,5 @@
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-
-//Serveur de base pris sur OpenClassRoom
 
 public class SyncServeur {
 
@@ -19,11 +15,8 @@ public class SyncServeur {
 				socket = new ServerSocket(srvport/*srvport*/);
 				Thread t = new Thread(new Accepterclients(socket, repRacine));
 				t.start(); 
-				System.out.println("Le serveur est prêt pour la connexion");
-				
-				
+				System.out.println("Le serveur est prêt pour la connexion");	
 			} catch (IOException e) {
-				
 				e.printStackTrace();  
 			}
 		}
