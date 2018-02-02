@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Scanner;
 
 //Client de base pris sur OpenClassRoom
 
@@ -20,10 +21,35 @@ public class SyncEsclave {
 		Socket socket;
 		File source = new File(repRacine);
 		File dest = new File(repCible);
+		Scanner sc = new Scanner(System.in);
+		boolean z = true;
+		String choix = null;
 
 		try {
-			System.out.println("Je suis l'esclave et je viens de me connecter");
+			System.out.println("Bonjour Esclave, que voulez vous faire ? (pull +' '+ e,s,w) ");
+
+			while (z == true) {
+				choix = sc.nextLine();
+				if ("pull e".equals(choix) || "pull s".equals(choix) || "pull w".equals(choix)) {
+					z = false;
+				} else
+					System.out.println("Resélectionner le choix :  ");
+			}
+			System.out.println("Okay, vous avez choisi de faire un " + choix);
 			socket = new Socket(InetAddress.getLocalHost(), svrNomPort);
+
+			if ("pull e".equals(choix)) {
+				pullE(source, dest);
+			}
+
+			if ("pull s".equals(choix)) {
+				pullS(source, dest);
+			}
+
+			if ("pull e".equals(choix)) {
+				pullW(source, dest);
+			}
+
 			copyDirectory(source, dest);
 			socket.close();
 
@@ -34,6 +60,41 @@ public class SyncEsclave {
 
 			e.printStackTrace();
 		}
+	}
+
+	public static void pullE(File source, File dest) throws IOException {
+		copyDirectory(source, dest);
+	}
+
+	// PULL S EST OK
+	public static void pullS(File source, File dest) throws IOException {
+
+		viderDossier(dest);
+		copyDirectory(source, dest);
+
+	}
+
+	public static void pullW(File source, File dest) throws IOException {
+
+		copyDirectoryWatchdog(source, dest);
+
+	}
+
+	public static void viderDossier(File D)
+
+	{
+
+		for (File f : D.listFiles())
+
+		{
+
+			if (f.isDirectory())
+				viderDossier(f);
+
+			f.delete();
+
+		}
+
 	}
 
 	public static void copy(final InputStream inStream, final OutputStream outStream, final int bufferSize)
@@ -66,12 +127,25 @@ public class SyncEsclave {
 
 	public static void copy(final File from, final File to) throws IOException {
 		if (from.isFile()) {
-			copyFile(from, to);
+				copyFile(from, to);
 		} else if (from.isDirectory()) {
 			copyDirectory(from, to);
 		} else {
 			throw new FileNotFoundException(from.toString() + " does not exist");
 		}
 	}
+	public static void copyDirectoryWatchdog(final File from, final File to) throws IOException {
+		if (!to.exists()) {
+			to.mkdir();
+		}
+		final File[] inDir = from.listFiles();
+		for (int i = 0; i < inDir.length; i++) {
+			final File file = inDir[i];
+			if(from.lastModified() > to.lastModified())
+				copy(file, new File(to, file.getName()));
+		}
+	}
+	
+	
 
 }
