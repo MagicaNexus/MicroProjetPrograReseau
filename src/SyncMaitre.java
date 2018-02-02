@@ -16,18 +16,20 @@ public class SyncMaitre extends SyncEsclave{
 	
 	public static void main(String[] args) {
 		
-		/*int svrNomPort = Integer.parseInt(args[2]);
-		String repSrc = args[3], repRacine = args[4];*/
+		int svrNomPort = Integer.parseInt(args[2]);
+		String repSrc = args[3], repRacine = args[4];
 		
 		Socket socket; //Création socket 
-		File contenu = new File ("Maitre"); //Création d'un dossier maitre
-		List<Metadonnee> metadAll = new ArrayList<Metadonnee>(); 
+		File Source = new File (repSrc); //Création d'un dossier maitre
+		File Racine = new File (repRacine); //Création d'un dossier maitre
+		
+		/*List<Metadonnee> metadAll = new ArrayList<Metadonnee>();*/ 
 		try {  
 			
 			//Connexion du maitre
 			System.out.println("Je suis le Maitre et je viens de me connecter");
-			//Attribution de l'adresse et du oprt de la socket
-		    socket = new Socket(InetAddress.getLocalHost(),8082/*svrNomPort*/);	
+			//Attribution de l'adresse et du port de la socket
+		    socket = new Socket(InetAddress.getLocalHost(),svrNomPort);	
 		    
 		    //Choix du mode de transfert
 		    System.out.println("Choix du mode de transfert de fichier :\n"
@@ -46,17 +48,18 @@ public class SyncMaitre extends SyncEsclave{
 	        afficheDocument(contenu.list(),contenu.getName());
 	        System.out.println("Confirmation fin affichage...................\n\n\n");*/
 	        
+		    copyDirectory(Source , Racine);
 	        
 	        
-	        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); //Création d'un objet de sortie
+	        /*ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); //Création d'un objet de sortie
 	        
-	        /*out.writeObject(contenu);
-	        out.flush();*/
+	        out.writeObject(contenu);
+	        out.flush();
 	        
 	        transfertChemin(contenu.listFiles() ,contenu.getName(), metadAll);
 	        System.out.println(metadAll.size());
 	        out.writeObject("Nombre de fichiers : "+metadAll);
-	        out.flush();
+	        out.flush();*/
 	       
 		    socket.close();
 
@@ -66,7 +69,10 @@ public class SyncMaitre extends SyncEsclave{
 		}catch (IOException e) {
 			
 			e.printStackTrace();
-		}
+		} /*catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
 	
 	public static void transfertChemin(File[] paths ,String parent, List<Metadonnee> metaAll) throws IOException, InterruptedException
