@@ -22,7 +22,7 @@ public class Accepterclients implements Runnable
 	public Accepterclients(ServerSocket s) {
 		socketserver = s;
 	}
-
+ 
 	@SuppressWarnings("unchecked")
 	public void run() {
  

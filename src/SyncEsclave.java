@@ -16,7 +16,7 @@ public class SyncEsclave extends File {
 
 	public static void main(String[] args) {
 		
-		int svrNomPort = Integer.parseInt(args[2]);
+		int svrNomPort = Integer.parseInt(args[2]); 
 		String repCible = args[3], repRacine = args[4];
 		Socket socket;
 		

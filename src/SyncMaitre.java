@@ -22,8 +22,6 @@ public class SyncMaitre {
 		
 		Socket socket; //Création socket 
 		File contenu = new File ("Maitre"); //Création d'un dossier maitre
-		File file = new File("Maitre\\ATransferer.txt"); //Création d'un nouveau fichier tkt atranferer
-		String[] doc = {"ATransferer.txt"}; //Tableau de string contenant le nom du fichier créé
 		List<Metadonnee> metadAll = new ArrayList<Metadonnee>(); 
 		try {  
 			
@@ -33,13 +31,13 @@ public class SyncMaitre {
 		    socket = new Socket(InetAddress.getLocalHost(),8082/*svrNomPort*/);	
 		    
 		    //Choix du mode de transfert
-		    /*System.out.println("Choix du mode de transfert de fichier :\n"
+		    System.out.println("Choix du mode de transfert de fichier :\n"
 		    		+ "1 : mode ecrasement fichier existant deja dans "
 		    		+ "le repertoire destination est ecrase par le fichier du repertoire source.\n"
 		    		+ "2 : mode suppression ou un fichier existant dans le repertoire destination "
 		    		+ "mais pas dans le repertoire source est supprime dans le repertoire destination.\n"
 		    		+ "3 : mode watchdog ou un fichier existant deja dans le repertoire destination"
-		    		+ " est ecrase uniquement par une version plus recente du fichier du repertoire source.\n");*/
+		    		+ " est ecrase uniquement par une version plus recente du fichier du repertoire source.\n");
 		    
 		    //boolean En cas de repertoire
 			//System.out.println("Est un repertoire : " + contenu.isDirectory());
