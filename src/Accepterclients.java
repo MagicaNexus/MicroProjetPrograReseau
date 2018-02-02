@@ -29,27 +29,27 @@ public class Accepterclients implements Runnable
 			while (true) {
 				socket = socketserver.accept(); // Un client se connecte on l'accepte => Pas d'identification encore
 				
-				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+				//ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				out.writeObject(serv);
+				out.flush();
 				/*File recv = (File) in.readObject();*/
-				File contenu = new File(serv); // Création d'un dossier maitre
-				boolean oui = contenu.mkdirs();
+				//File contenu = new File(serv); // Création d'un dossier maitre
+				//boolean oui = contenu.mkdirs();
 				//System.out.println("A ete cree " + oui  + " recu : "+ recv.listFiles().toString());
 				
-				System.out.println("De nom " + contenu.getName() +" De type : " +
-						contenu.isDirectory()+ " chemin : " + contenu.getAbsolutePath() );
+				//System.out.println("De nom " + contenu.getName() +" De type : " +
+						//contenu.isDirectory()+ " chemin : " + contenu.getAbsolutePath() );
 				
 				//copieDoc(recv.listFiles(), contenu);
 				/*String parent = recv.getName()+ "\\";
 				
 				Object meta = in.readObject();
 				metadAll = (List<Metadonnee>) meta;*/
-				recupereDocument(metadAll,contenu,in);
+				//recupereDocument(metadAll,contenu,in);
 				socket.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
