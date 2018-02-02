@@ -10,25 +10,20 @@ import java.nio.file.Path;
 
 //Client de base pris sur OpenClassRoom
 
-public class SyncEsclave extends File {
-
-	public SyncEsclave(URI arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
+public class SyncEsclave {
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 
-		//int svrNomPort = Integer.parseInt(args[2]);
-		//String repCible = args[3], repRacine = args[4];
+		int svrNomPort = Integer.parseInt(args[2]);
+		String repCible = args[3], repRacine = args[4];
 		Socket socket;
-		File source = new File("Serveur");
-		File dest = new File("Esclave");
+		File source = new File(repRacine);
+		File dest = new File(repCible);
 
 		try {
 			System.out.println("Je suis l'esclave et je viens de me connecter");
-			socket = new Socket(InetAddress.getLocalHost(), 8082);
+			socket = new Socket(InetAddress.getLocalHost(), svrNomPort);
 			copyDirectory(source, dest);
 			socket.close();
 

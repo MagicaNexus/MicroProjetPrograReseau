@@ -12,13 +12,12 @@ import java.util.List;
 
 //Client de base pris sur OpenClassRoom
 
-public class SyncMaitre {
+public class SyncMaitre extends SyncEsclave{
 	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		
 		/*int svrNomPort = Integer.parseInt(args[2]);
 		String repSrc = args[3], repRacine = args[4];*/
-		
 		
 		Socket socket; //Création socket 
 		File contenu = new File ("Maitre"); //Création d'un dossier maitre
@@ -51,9 +50,12 @@ public class SyncMaitre {
 	        
 	        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); //Création d'un objet de sortie
 	        
+	        /*out.writeObject(contenu);
+	        out.flush();*/
+	        
 	        transfertChemin(contenu.listFiles() ,contenu.getName(), metadAll);
 	        System.out.println(metadAll.size());
-	        out.writeObject(metadAll);
+	        out.writeObject("Nombre de fichiers : "+metadAll);
 	        out.flush();
 	       
 		    socket.close();
@@ -70,32 +72,43 @@ public class SyncMaitre {
 	public static void transfertChemin(File[] paths ,String parent, List<Metadonnee> metaAll) throws IOException, InterruptedException
 	{
 		System.out.println("\n---- Début du transfert du chemin......................");
-		System.out.println("Affichage du parent : " + paths.length);
+		System.out.println("Affichage de la taille : " + paths.length);
 		
 		for(File f:paths) 
 		{
 			
-				System.out.println("Création du fichier à l'emplacement suivant : " +f.getAbsolutePath());
+				System.out.println("Création du fichier dans" + f.getParent() + f.getName() +"à l'emplacement suivant : \n" +f.getAbsolutePath());
 				if (f.isDirectory())
 				{
-					parent += "\\" + f.getName();
-					transfertChemin(f.listFiles(),parent, metaAll);
+					//parent += "\\" + f.getName();
+					metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified(),null, null));
+					transfertChemin(f.listFiles(),f.getAbsolutePath() /*parent*/, metaAll);
 					//debug
 					System.out.println("Changement de repertoire réussi : " + parent);
+				} else {
+					System.out.println("Taille du fichier : " + f.length());
+				    
+					if (f.length() > 0)
+					{
+						byte buf[] = new byte[1024];
+					    int taille;
+					    String message = "";
+						FileInputStream in = new FileInputStream(f);
+						taille=in.read(buf);
+						byte mes[] = new byte[taille];
+						for (int i = 0;i<taille;i++)
+						{
+							message += (char)buf[i]; 
+							mes[i] = buf[i];
+						}
+						metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified(),message, mes));
+					}else {
+						System.out.println("Objet vide");
+						//metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified(),null, null));
+					}
+					
 				}
-				byte buf[] = new byte[1024];
-			    int taille;
-			    String message = "";
-			    
-			    FileInputStream in = new FileInputStream(f);
-				taille=in.read(buf);
-				byte mes[] = new byte[taille];
-				for (int i = 0;i<taille;i++)
-				{
-					message += (char)buf[i];
-					mes[i] = buf[i];
-				}
-				metaAll.add(new Metadonnee (f.getName(),f.getAbsolutePath().replace(System.getProperty("user.dir"), ""),f.length(),f.lastModified(),message, mes));
+				
 				//debug
 				System.out.println("\n\nCréation métadonnées ok\n\n");		
 				System.out.println("\n\nFin du transfert .........................................");
