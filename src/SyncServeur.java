@@ -6,8 +6,8 @@ public class SyncServeur {
 	//Connexion du serveur
 	public static void main(String[] args) {
 			
-			int srvport = Integer.parseInt(args[2]);
-			String repRacine = args[3]; // récuperation des parametres*/
+			int srvport = Integer.parseInt(args[0]);
+			String repRacine = args[1]; // récuperation des parametres*/
 			ServerSocket socket;
 			System.out.println("En attente de reception............."); 
 			try  

@@ -11,17 +11,17 @@ public class SyncMaitre extends SyncEsclave{
 		int svrNomPort = 0;
 		String repSrc = null, repRacine = null;
 		String options ="";
-		if (args.length <5)
+		if (args.length <3)
 		{
 			System.out.println("Il faut au moins mettre : java SyncMaitre serveurPort repertoireSource repertoireRacine");
 		}else {
-			if(args.length >7){
+			if(args.length >5){
 				System.out.println("Seule 2 options simultanees sont possibles -w -s, -e -s");
 			}
-			svrNomPort = Integer.parseInt(args[2]);
-			repSrc = args[3];
-			repRacine = args[4];
-			for(int i = 5;i<args.length;i++)
+			svrNomPort = Integer.parseInt(args[0]);
+			repSrc = args[1];
+			repRacine = args[2];
+			for(int i = 3;i<args.length;i++)
 			{
 				options += args[i];
 			}

@@ -12,22 +12,22 @@ public class SyncEsclave {
 		
 		int svrNomPort = 0;
 		String repCible = null, repRacine = null;
-		String options =""; 
-		if (args.length <5)
+		String options = ""; 
+		if (args.length <3)
 		{
 			System.out.println("Il faut au moins mettre : java SyncMaitre serveurPort repertoireSource repertoireRacine");
 		}else {
-			if(args.length >7){
+			if(args.length >5){
 				System.out.println("Seule 2 options simultanees sont possibles -w -s, -e -s");
 			}
-			svrNomPort = Integer.parseInt(args[2]);
-			repCible = args[3];
-			repRacine = args[4];
-			for(int i = 5;i<args.length;i++)
+			svrNomPort = Integer.parseInt(args[0]);
+			repCible = args[1];
+			repRacine = args[2];
+			for(int i = 3;i<args.length;i++)
 			{
 				options += args[i];
 			}
-			System.out.println("Les options sont :" + options);
+			System.out.println("Les options sont :" + options + options.length());
 		}
 		
 		Socket socket;
@@ -39,19 +39,9 @@ public class SyncEsclave {
 		String choix = null;
 
 		try {
-			System.out.println("Bonjour Esclave, que voulez vous faire ? (pull +' '+ e,s,w) ");
-
-			while (z == true) {
-				choix = sc.nextLine();
-				if ("pull e".equals(choix) || "pull s".equals(choix) || "pull w".equals(choix)) {
-					z = false;
-				} else
-					System.out.println("Reselectionner le choix :  ");
-			}
-			System.out.println("Okay, vous avez choisi de faire un " + choix);
 			socket = new Socket(InetAddress.getLocalHost(), svrNomPort);
-
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+			
 	        String repS = (String) in.readObject();
 	        System.out.println("Repertoire racine envoye du serveur : \n"+ repS);
 	        if(repS.equals(repRacine)) {
@@ -64,19 +54,34 @@ public class SyncEsclave {
 	        source = new File(repRacine);
 			dest = new File(repCible);
 			
-			if ("pull e".equals(choix)) {
-				pullE(source, dest);
+			if(options.length()==0) {
+				System.out.println("On execute le mode écrasement par défaut \n");
+				copyDirectory(source, dest);
+			}else {
+				switch(options.indexOf('s')) {
+				case -1 : 
+					System.out.println("Le mode suppression n'est pas selectionné : \n");
+				default :
+					System.out.println("Le mode suppression est selectionné : \n");
+					pullS(source, dest);
+				}
+			
+				switch(options.indexOf('e')) {
+					case -1 : 
+						System.out.println("Le mode écrasement n'est pas selectionné : \n");
+					default :
+						System.out.println("Le mode écrasement est selectionné : \n");
+						pullE(source, dest);
+				}
+			
+				switch(options.indexOf('w')) {
+					case -1 : 
+						System.out.println("Le mode watchdog n'est pas selectionné : \n");
+					default :
+						System.out.println("Le mode watchdog est selectionné : \n");
+						pullW(source, dest);
+				}
 			}
-
-			if ("pull s".equals(choix)) {
-				pullS(source, dest);
-			}
-
-			if ("pull e".equals(choix)) {
-				pullW(source, dest);
-			}
-
-			copyDirectory(source, dest);
 			socket.close();
 
 		} catch (UnknownHostException e) {
