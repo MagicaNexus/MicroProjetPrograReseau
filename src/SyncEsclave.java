@@ -18,7 +18,7 @@ public class SyncEsclave {
 			System.out.println("Il faut au moins mettre : java SyncMaitre serveurPort repertoireSource repertoireRacine");
 		}else {
 			if(args.length >7){
-				System.out.println("Seule 2 options simultanées sont possibles -w -s, -e -s");
+				System.out.println("Seule 2 options simultanï¿½es sont possibles -w -s, -e -s");
 			}
 			svrNomPort = Integer.parseInt(args[2]);
 			repCible = args[3];
@@ -38,18 +38,22 @@ public class SyncEsclave {
 		String choix = null;
 
 		try {
-			System.out.println("Bonjour Esclave, que voulez vous faire ? (pull +' '+ e,s,w) ");
+			System.out.println("Bonjour Esclave, que voulez vous faire ? (pull +' '+ e,s,w) "); // On demande ce que
+																								// veut faire l'esclave
 
-			while (z == true) {
-				choix = sc.nextLine();
+			while (z == true) { // Vï¿½rification de la frappe de l'esclave
+				choix = sc.nextLine(); // Il tape son choix
 				if ("pull e".equals(choix) || "pull s".equals(choix) || "pull w".equals(choix)) {
-					z = false;
+					z = false; // On sort de la boucle si c'est bon
 				} else
-					System.out.println("Resélectionner le choix :  ");
+					System.out.println("Resï¿½lectionner le choix :  "); // Sinon on resï¿½lectionne le choix
 			}
+
+			// Validation
 			System.out.println("Okay, vous avez choisi de faire un " + choix);
 			socket = new Socket(InetAddress.getLocalHost(), svrNomPort);
 
+			// En fonction du choix, on lance la mï¿½thode adï¿½quate
 			if ("pull e".equals(choix)) {
 				pullE(source, dest);
 			}
@@ -62,7 +66,6 @@ public class SyncEsclave {
 				pullW(source, dest);
 			}
 
-			copyDirectory(source, dest);
 			socket.close();
 
 		} catch (UnknownHostException e) {
@@ -74,11 +77,12 @@ public class SyncEsclave {
 		}
 	}
 
+	// ******************************PULL E**********************************//
 	public static void pullE(File source, File dest) throws IOException {
 		copyDirectory(source, dest);
 	}
 
-	// PULL S EST OK
+	// ******************************PULL S**********************************//
 	public static void pullS(File source, File dest) throws IOException {
 
 		viderDossier(dest);
@@ -86,12 +90,14 @@ public class SyncEsclave {
 
 	}
 
+	// ******************************PULL W**********************************//
 	public static void pullW(File source, File dest) throws IOException {
 
 		copyDirectoryWatchdog(source, dest);
 
 	}
 
+	// Mï¿½thode pour vider et supprimer les ï¿½lï¿½ments d'un dossier
 	public static void viderDossier(File D)
 
 	{
@@ -109,6 +115,9 @@ public class SyncEsclave {
 
 	}
 
+	// Mï¿½thode pour copier et coller un ou des fichiers d'un emplacement A ï¿½ un
+	// emplacement B
+
 	public static void copy(final InputStream inStream, final OutputStream outStream, final int bufferSize)
 			throws IOException {
 		final byte[] buffer = new byte[bufferSize];
@@ -125,6 +134,7 @@ public class SyncEsclave {
 		final File[] inDir = from.listFiles();
 		for (int i = 0; i < inDir.length; i++) {
 			final File file = inDir[i];
+			//On sï¿½lï¿½ctionne tous les fichiers d'un repertoire et on les copie
 			copy(file, new File(to, file.getName()));
 		}
 	}
@@ -139,13 +149,16 @@ public class SyncEsclave {
 
 	public static void copy(final File from, final File to) throws IOException {
 		if (from.isFile()) {
-				copyFile(from, to);
+			copyFile(from, to);
 		} else if (from.isDirectory()) {
 			copyDirectory(from, to);
 		} else {
 			throw new FileNotFoundException(from.toString() + " does not exist");
 		}
 	}
+
+	
+	//Mï¿½thode spï¿½ciale pour le watchdog
 	public static void copyDirectoryWatchdog(final File from, final File to) throws IOException {
 		if (!to.exists()) {
 			to.mkdir();
@@ -153,8 +166,8 @@ public class SyncEsclave {
 		final File[] inDir = from.listFiles();
 		for (int i = 0; i < inDir.length; i++) {
 			final File file = inDir[i];
-			if(from.lastModified() > to.lastModified())
-				copy(file, new File(to, file.getName()));
+			if (from.lastModified() > to.lastModified()) //On vï¿½rifie si le fichier est plus rï¿½cent
+				copy(file, new File(to, file.getName())); //et on le copie
 		}
 	}
 }
